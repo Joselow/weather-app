@@ -1,0 +1,261 @@
+*{
+	font-family: 'Roboto';
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-weight: bold;
+	color: #D2D3D3;
+}
+
+body{
+		 background-attachment: fixed;
+
+  background-size: cover;
+
+}
+.content-msg{
+	position: relative;
+
+}
+.message {
+	padding: 10px 40px;
+	text-align: center;
+	font-size: 20px;
+
+	position: absolute;
+	top: 0;
+	right: 0;
+	background-color: red;
+	color: #fff;
+	border-radius: 5px;
+	margin-right: 1.5%;
+	z-index: -99999;
+	font-weight: bold;
+
+	display: none;	
+		animation: msgUp 2s backwards;
+
+}
+
+@keyframes msgUp{
+	from{
+		opacity:0;
+		transform: translateY(-100%);
+
+	}
+	to{
+			display: block;	
+			opacity:1;
+
+	}
+}
+
+@keyframes msgDown {
+  from{
+    opacity:1
+  }
+  to{
+    opacity:0;
+    transform:translateY(10%);
+
+
+  }
+}
+
+.content{
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}
+.content-weather{
+	height: 80vh;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap ;
+	display: flex;
+	gap: 100px;
+
+}	
+
+.btns-weather{
+	display: flex;
+	gap: 25px;
+	align-items: center;
+}
+.entry{
+	color: #fe309c;
+	margin-top: 1%;
+	width: 97%;
+	background-color: #000;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.9);
+
+    display: flex;
+    justify-content: center;
+	   gap: 50px;
+	   flex-wrap: wrap;
+}
+.entry label{
+	font-size: 20px;
+	font-weight: bold;
+}
+.entry input{
+	text-decoration: none;
+	padding: 5px 10px;
+	border-radius: 16px;
+/*	border: 2px solid #000;*/
+	font-size: 22px;
+	font-weight: bold;
+	background-color: #c1ddda;
+	color: #17202A;
+	
+}
+.entry input:focus{
+	background-color: #c1ddda;
+	color: #17202A;
+	border: none;
+	outline: none;
+}
+
+.weather, .place{
+	margin-top: 50px;
+	color: #fff;
+	width: 500px;
+	height: 550px;
+    padding: 20px;
+    text-align: center;
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px  rgba(0,0,0,1);
+    display: flex;
+ 	flex-direction: column;
+ 	justify-content: space-evenly;
+  }
+
+.weather img{
+	object-fit: cover;
+	align-self: center;
+	width: 300px;
+
+}
+ 
+  /* temperature value */
+  .temperature-value {
+    font-size: 4em;
+    margin: 0;
+  }
+  
+  /* observation */
+  .observation {
+/*  	color: #ff0086;*/
+    font-size: 2em;
+    margin: 0;
+  }
+  
+  /* location */
+  .location {
+    font-size: 3em;
+    margin: 0;
+  }
+  
+  /* meteor */
+  .meteor {
+    font-size: 1.5em;
+    margin: 0;
+  }
+  
+  /* labels */
+  label {
+    font-size: 1.5em;
+    margin-top: 20px;
+  }
+  
+  /* values */
+  h3 {
+  	color: ;
+    font-size: 2em;
+    margin: 0;
+    font-weight: normal;
+  }
+  
+
+
+
+@media only screen and (max-width: 1000px) {
+
+	.content-weather{
+		gap:0px;
+	}
+	.entry{
+	width: 90%;
+
+}
+.message{
+	margin-right: 5%;
+}
+.entry{
+		 gap: 15px;
+			background-color:rgba(0, 0, 0, 0.7);
+
+
+}
+	.place{
+	margin-bottom: 20px;
+}
+
+.weather, .place{
+
+	width: 500px;
+	height: 450px;
+}
+
+	body {
+	  background-attachment: fixed;
+	  background-repeat: no-repeat;
+	  background-position: center center;
+	  margin: 0;
+	}
+.weather img{
+	
+	width: 275px;
+
+}
+
+}
+
+button{
+	width: 60px;
+	height: 30px;
+	color: #000;
+	border-radius: 30px;
+}
+
+@media only screen and (max-width: 600px) {
+	.weather, .place{
+		width: 340px;
+		height: 450px;
+	}
+	.weather img{
+	
+	width: 250px;
+
+}
+.entry{
+		  gap: 10px;
+			background-color:rgba(0, 0, 0, 0.4);
+
+}
+.entry input{
+	    border-radius: 8px;
+
+}
+.message{
+	font-size: 15px;
+}
+
+.btns-weather button{
+	 border-radius: 10px;	
+	}
+
+}
