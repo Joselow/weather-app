@@ -40,16 +40,19 @@ const countryCodes = {
   'nicaragua': 'NI',
   'panama': 'PA',
   'paraguay': 'PY',
-  'peru': 'PE',
+  peru: 'PE',
 
   'accents' : {
-  	'peru': 'perú',
-    'perú': 'perú',
+  	peru: 'perú',
+    perú: 'perú',
     'japón': 'japon',
     'china': 'pekin',
-    'pekín': 'pekin'
-  },
+    'pekín': 'pekin',
+	'ucrania' : 'ukrania',
 
+
+  },
+  'ukrania' : 'UA',
   'puerto rico': 'PR',
   'republica dominicana': 'DO',
   'uruguay': 'UY',
@@ -100,14 +103,14 @@ let scaleK = document.querySelector( '.scale-k' )
 
 let scales;
 scaleC.addEventListener( 'click', (e) => {
-	alert("Siguientes consultas  en 'celcius'")
+	// alert("Siguientes consultas  en 'celcius'")
 	scales = units["celcius"]
 	scaleC.style = "background:#d4f"
 	scaleK.style = "background:#fff"
 	scaleF.style = "background:#fff"
 } )
 scaleF.addEventListener( 'click', (e) => {
-	alert("Siguientes consultas  en 'fahrenheit'")
+	// alert("Siguientes consultas  en 'fahrenheit'")
 	scales = units["fahrenheit"]
 	scaleF.style = "background:#d4f"
 	scaleC.style = "background:#fff"
@@ -115,7 +118,7 @@ scaleF.addEventListener( 'click', (e) => {
 
 } )
 scaleK.addEventListener( 'click', (e) => {
-	alert("Siguientes consultas  en 'kelvin'")
+	// alert("Siguientes consultas  en 'kelvin'")
 	scales = units["kelvin"]
 		scaleK.style = "background:#d4f"
 		scaleC.style = "background:#fff"
@@ -291,20 +294,20 @@ location.getCurrentPosition( position )
 
 	let valorAnterior = scales;
 
-// function verificarCambio() {
-// 	console.log("YA")
-//   if (scales !== valorAnterior) {
-//     valorAnterior = scales;
-//     const url = 	urlS(API_KEY, '', '', lat, lon, scales)
-//     	getData(url)
-// 	 weatherInterval( url )
-//   }
-//     requestAnimationFrame(verificarCambio);
+function verificarCambio() {
+	console.log("YA")
+  if (scales !== valorAnterior) {
+    valorAnterior = scales;
+    const url = 	urlS(API_KEY, '', '', lat, lon, scales)
+    	getData(url)
+	 weatherInterval( url )
+  }
+    requestAnimationFrame(verificarCambio);
 
-// }
-//   requestAnimationFrame(verificarCambio);
+}
+  requestAnimationFrame(verificarCambio);
 
-// setInterval(verificarCambio, 1000); // Comprobar cada segundo
+setInterval(verificarCambio, 1000); // Comprobar cada segundo
 
 
 
@@ -312,7 +315,7 @@ location.getCurrentPosition( position )
 
 const convertCoCode = ( country, type) => {
 
-	return type == 'coCi' ? countryCodes[country.toLowerCase().replace( /[áä]/g, 'a').replace(/[éë]/g, 'e').replace(/[íï]/g, 'i').replace(/[óö]/g, 'o').replace(/[úü]/g, 'u')].toUpperCase()  
+	return type == 'coCi' && countryCodes[country]? countryCodes[country.toLowerCase().replace( /[áä]/g, 'a').replace(/[éë]/g, 'e').replace(/[íï]/g, 'i').replace(/[óö]/g, 'o').replace(/[úü]/g, 'u')].toUpperCase()  
 												: type== "onlyC" ? countryCodes['accents'][country] ? countryCodes['accents'][country] 
 												: country  
 												:  console.log('Invalid case type.');
