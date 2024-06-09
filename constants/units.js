@@ -1,3 +1,11 @@
+
+export const unitsMap = {
+  metric: { tempUnit: '°C', windUnit: 'km/s' },
+  imperial: { tempUnit: '°F', windUnit: 'mi/h' },
+  default: { tempUnit: '°K', windUnit: 'km/h' }
+};
+
+
 export const units = { 
   celcius : 'metric', 
   fahrenheit : 'imperial', 
@@ -5,17 +13,27 @@ export const units = {
 }
 export const lang = "es"
 
-export const meteorologic = {
-			'Clear' : "Despejado",
-			'Clouds' : "Con nubes",
-			'Snow' : "Cae nieve",
-			'Rain' : "Cae lluvia",
-			'Drizzle' : "Cae llovizna",
-			'Thunderstorm' : "Hay tormenta",
-			'Atmosphere' : "Atmosfera",
-			'Fog' : "Con niebla",
-			'Mist' : "Con neblina",
-		}
+export const meteorInSpanish = {
+  'Clear' : "Despejado",
+  'Clouds' : "Con nubes",
+  'Snow' : "Cae nieve",
+  'Rain' : "Cae lluvia",
+  'Drizzle' : "Cae llovizna",
+  'Thunderstorm' : "Hay tormenta",
+  'Atmosphere' : "Atmosfera",
+  'Fog' : "Con niebla",
+  'Mist' : "Con neblina",
+}
+
+
+export const countriesWithExceptions = {
+  'peru': 'perú',
+  'perú': 'perú',
+  'japón': 'japon',
+  'china': 'pekin',
+  'pekín': 'pekin'
+}
+
 export const countryCodes = {
   // Latinoamérica
   'argentina': 'AR',
