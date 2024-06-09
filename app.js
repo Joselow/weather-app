@@ -54,7 +54,7 @@ scaleC.addEventListener( 'click', (e) => {
 } )
 
 scaleF.addEventListener( 'click', (e) => {
-	alert("Siguientes consultas  en 'fahrenheit'")
+	// alert("Siguientes consultas  en 'fahrenheit'")
 	scales = units["fahrenheit"]
 	scaleF.style = "background:#d4f"
 	scaleC.style = "background:#fff"
@@ -63,7 +63,7 @@ scaleF.addEventListener( 'click', (e) => {
 } )
 
 scaleK.addEventListener( 'click', (e) => {
-	alert("Siguientes consultas  en 'kelvin'")
+	// alert("Siguientes consultas  en 'kelvin'")
 	scales = units["kelvin"]
 		scaleK.style = "background:#d4f"
 		scaleC.style = "background:#fff"
@@ -248,20 +248,20 @@ location.getCurrentPosition( position )
 
 	let valorAnterior = scales;
 
-// function verificarCambio() {
-// 	console.log("YA")
-//   if (scales !== valorAnterior) {
-//     valorAnterior = scales;
-//     const url = 	urlS(API_KEY, '', '', lat, lon, scales)
-//     	getData(url)
-// 	 weatherInterval( url )
-//   }
-//     requestAnimationFrame(verificarCambio);
+function verificarCambio() {
+	console.log("YA")
+  if (scales !== valorAnterior) {
+    valorAnterior = scales;
+    const url = 	urlS(API_KEY, '', '', lat, lon, scales)
+    	getData(url)
+	 weatherInterval( url )
+  }
+    requestAnimationFrame(verificarCambio);
 
-// }
-//   requestAnimationFrame(verificarCambio);
+}
+  requestAnimationFrame(verificarCambio);
 
-// setInterval(verificarCambio, 1000); // Comprobar cada segundo
+setInterval(verificarCambio, 1000); // Comprobar cada segundo
 
 
 
