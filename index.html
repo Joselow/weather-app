@@ -13,11 +13,13 @@
 <body>
 	<div class="content-gf">
 		
-		<div class="content">
-			<div class="content-child entry">
-			
-				<input class="search-co" placeholder=" Pais " type="text" name="">
-				<input class="search-ci" placeholder=" Ciudad" type="text" name="">
+		<div class="content form">
+			<div class="content-child entry">		
+        <form action="" id="wheater-form">
+          <input class="search-co" placeholder=" Pais " type="text" name="country">
+          <input class="search-ci" placeholder=" Ciudad" type="text" name="city">
+          <button id="btn-search" type="submit">Buscar</button>
+        </form>	
 				<div class="btns-weather">
 					<button class="scale-c">°C</button>
 					<button class="scale-f">°F</button>
@@ -79,6 +81,6 @@
 	</div>
 
 
-	<script src="app.js" type="text/javascript" charset="utf-8" async defer></script>
+	<script src="./app.js" type="module" charset="utf-8" ></script>
 </body>
 </html>

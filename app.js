@@ -1,86 +1,15 @@
+import { units, countryCodes, meteorologic, lang } from './constants/units.js'
+import { API_KEY } from './constants/index.js'
+import { showError } from './helpers/showError.js'
+import { currentHour } from './utils/time.js'
+
 "use strict"
 
 addEventListener( 'load', (e) =>  {
 		scaleC.style = "background:#d4f"
-
 })
 
 let lon, lat;
-const units = { 
-		'celcius' : 'metric', 'fahrenheit' : 'imperial', 'kelvin' :''
-	}
-const lang = "es"
-const API_KEY = '2bdd0e1404654c945c712b75c0985f2d'
-
-const meteorologic = {
-			'Clear' : "Despejado",
-			'Clouds' : "Con nubes",
-			'Snow' : "Cae nieve",
-			'Rain' : "Cae lluvia",
-			'Drizzle' : "Cae llovizna",
-			'Thunderstorm' : "Hay tormenta",
-			'Atmosphere' : "Atmosfera",
-			'Fog' : "Con niebla",
-			'Mist' : "Con neblina",
-		}
-const countryCodes = {
-  // Latinoamérica
-  'argentina': 'AR',
-  'bolivia': 'BO',
-  'brasil': 'BR',
-  'chile': 'CL',
-  'colombia': 'CO',
-  'costa rica': 'CR',
-  'cuba': 'CU',
-  'ecuador': 'EC',
-  'el salvador': 'SV',
-  'guatemala': 'GT',
-  'honduras': 'HN',
-  'mexico': 'MX',
-  'nicaragua': 'NI',
-  'panama': 'PA',
-  'paraguay': 'PY',
-  'peru': 'PE',
-
-  'accents' : {
-  	'peru': 'perú',
-    'perú': 'perú',
-    'japón': 'japon',
-    'china': 'pekin',
-    'pekín': 'pekin'
-  },
-
-  'puerto rico': 'PR',
-  'republica dominicana': 'DO',
-  'uruguay': 'UY',
-  'venezuela': 'VE',
-  
-  // Otros países
-  'australia': 'AU',
-  'canada': 'CA',
-  'china': 'CN',
-  'dinamarca': 'DK',
-  'egipto': 'EG',
-  'francia': 'FR',
-  'alemania': 'DE',
-  'grecia': 'GR',
-  'india': 'IN',
-  'japon': 'JP',
-
-  'kenia': 'KE',
-  'malasia': 'MY',
-  'nueva zelanda': 'NZ',
-  'rusia': 'RU',
-  'sudafrica': 'ZA',
-  'corea del sur': 'KR',
-  'suiza': 'CH',
-  'tailandia': 'TH',
-  'turquia': 'TR',
-  'reino unido': 'GB',
-  'estados unidos': 'US',
-};
-
-
 
 let tempValue = document.querySelector('.temperature-value')
 let icon = document.querySelector('.icon')
@@ -96,16 +25,34 @@ let entryCi = document.querySelector('.search-ci')
 let scaleC = document.querySelector( '.scale-c' )
 let scaleF = document.querySelector( '.scale-f' )
 let scaleK = document.querySelector( '.scale-k' )
+let wheaterForm = document.getElementById( 'wheater-form' )
 // let scalesTs = document.getElementsByName('scales')  // -- radio
 
+
+wheaterForm.addEventListener('submit', (e) => {
+  e.preventDefault()
+
+  const form = e.target
+  const formData = new FormData(form) 
+  const { city, country } = Object.fromEntries(formData)
+
+  if (!country) {
+    showError('Por favor ingrese el pais')
+  }
+})
+
+
 let scales;
+
 scaleC.addEventListener( 'click', (e) => {
 	alert("Siguientes consultas  en 'celcius'")
-	scales = units["celcius"]
+	scales = units.celcius
+
 	scaleC.style = "background:#d4f"
 	scaleK.style = "background:#fff"
 	scaleF.style = "background:#fff"
 } )
+
 scaleF.addEventListener( 'click', (e) => {
 	alert("Siguientes consultas  en 'fahrenheit'")
 	scales = units["fahrenheit"]
@@ -114,13 +61,13 @@ scaleF.addEventListener( 'click', (e) => {
 	scaleK.style = "background:#fff"
 
 } )
+
 scaleK.addEventListener( 'click', (e) => {
 	alert("Siguientes consultas  en 'kelvin'")
 	scales = units["kelvin"]
 		scaleK.style = "background:#d4f"
 		scaleC.style = "background:#fff"
 		scaleF.style = "background:#fff"
-
 } )
 
 //realtime
@@ -139,27 +86,22 @@ scaleK.addEventListener( 'click', (e) => {
 //   });
 // });
 
-const showError = (error) => {
-	let msg =  document.querySelector('.message')
-			msg.textContent =  error
-			msg.style =  "display:block"
-			 setTimeout(() => {
-			 		msg.style.animation = "msgDown 1s forwards"
-			  }, 2500);
-}
+
 
 const getData = async ( url ) => {
-
 	try{
-
 		let request = await fetch(url)
+
 		if ( !(request.ok) ) {
-			showError( "Ubicación inexistente" )
-			console.log("No existe ")
-			return "Request Failed"
+      if (request.status === 404) {
+        throw Error('Not found')
+      }
+      else{
+        throw Error('Error in request')
+      }
 		}
+
 		let response = await request.json()
-		console.log(response)
 
 		let temp = Math.round(response.main.temp)
 		let position = response.name
@@ -170,29 +112,39 @@ const getData = async ( url ) => {
 		let meteoro = response.weather[ 0 ].main
 		let moisture = response.main.humidity
 		
-		url.includes('metric') ? (tempValue.textContent = `${temp} °C`, windG.textContent = `${windGust ? windGust + ' km/s' : '...'}`, windS.textContent = `${windSpeed} km/s`) 
-: url.includes('imperial') ? (tempValue.textContent = `${temp} °F`, windG.textContent = `${windGust ? windGust + ' mi/h' : '...'}`, windS.textContent = `${windSpeed} mi/h`)
-: (tempValue.textContent = `${temp} °K`, windG.textContent = `${windGust ? windGust + ' km/h' : '...'}`, windS.textContent = `${windSpeed} km/h`)
-
+    if (url.includes('metric')) {
+      tempValue.textContent = `${temp} °C`;
+      windG.textContent = `${windGust ? windGust + ' km/s' : '...'}`;
+      windS.textContent = `${windSpeed} km/s`;
+    } else if (url.includes('imperial')) {
+        tempValue.textContent = `${temp} °F`;
+        windG.textContent = `${windGust ? windGust + ' mi/h' : '...'}`;
+        windS.textContent = `${windSpeed} mi/h`;
+    } else {
+        tempValue.textContent = `${temp} °K`;
+        windG.textContent = `${windGust ? windGust + ' km/h' : '...'}`;
+        windS.textContent = `${windSpeed} km/h`;
+    }
+  
 		located.textContent = position
 		description.textContent = observation
 		humidity.textContent = `${moisture} %`
 
-
-		correctIcons( meteoro )
+		putCorrectIcon( meteoro )
 
 	}catch (error) {
-  console.log("The API death :C \n", error);
-  showError("No pudimos acceder a los datos")
- 
+    if (error.message === 'Not found') {
+      showError( "Ubicación inexistente" )
+      return
+    }
+    showError("Lo sentimos ocurrio un error imprevisto, lo solucionaremos muy pronto")
+  }
 }
-}
-const correctIcons = ( meteoro ) => {
-			let hour = currentHour()[0]
+const putCorrectIcon = ( meteoro ) => {
+			let hour = currentHour().hour
 			// hour = 5
 	switch (meteoro){
 			case 'Clear':
-
 				( hour < 6 || hour >= 18) ? (meteor.textContent = meteorologic[meteoro], icon.src = 'animated/night.svg')
 										 							: (meteor.textContent = meteorologic[meteoro], icon.src = 'animated/day.svg')
 				break
@@ -209,8 +161,8 @@ const correctIcons = ( meteoro ) => {
 				icon.src = 'animated/rainy-5.svg'
 				break
 			case 'Drizzle':
-				( hour < 6 || hour >= 18) ? (meteor.textContent = meteorologic[meteoro], icon.src = 'animated/night.svg' )
-																	: (meteor.textContent = meteorologic[meteoro], icon.src = 'animated/day.svg' )
+				( hour < 6 || hour >= 18) ? (meteor.textContent = meteorologic[meteoro], icon.src = 'animated/rainy-7.svg' )
+																	: (meteor.textContent = meteorologic[meteoro], icon.src = 'animated/rainy-7.svg' )
 				break
 			case 'Thunderstorm':
 				meteor.textContent = meteorologic[meteoro]
@@ -233,13 +185,8 @@ const correctIcons = ( meteoro ) => {
 		}
 
 }
-const currentHour = () => {
-		let date =  new Date;
-		let hour = date.getHours()
-		let minuts = date.getMinutes()
 
-		return [hour, minuts]
-}
+
 
 const  weatherInterval= ( url ) => {  // recupérar info cada 20 min
 	console.log("uwu")
@@ -247,15 +194,25 @@ const  weatherInterval= ( url ) => {  // recupérar info cada 20 min
 		getData(url)
 	}, 14400000 ) //cada 4 horas
 }
+
 const urlS = (API_KEY, city = '', country = '', lat = '', lon = '', scale = 'metric') => { //URL
+  console.log('sin ciudad','ciudad:', city,'pais:', country);
 	if (city == ''){
 			const url = `https://api.openweathermap.org/data/2.5/weather?&lat=${lat}&lon=${lon}&q=${city}&appid=${API_KEY}&units=${scale}&lang=${lang}`
 			return	url			
 	}
 
-	const url = `https://api.openweathermap.org/data/2.5/weather?&lat=${lat}&lon=${lon}&q=${city},${country}&appid=${API_KEY}&units=${scale}&lang=${lang}`
+	const url =     `https://api.openweathermap.org/data/2.5/weather?&lat=${lat}&lon=${lon}&q=${city},${country}&appid=${API_KEY}&units=${scale}&lang=${lang}`
 	return url
 }
+
+const buildUrl = ( { KEY , city = '', country = '', lat = '', lon = '', scale = 'metric' }) => { //URL
+  if (!city){
+    return `https://api.openweathermap.org/data/2.5/weather?&lat=${lat}&lon=${lon}&q=${country}&appid=${KEY}&units=${scale}&lang=${lang}`
+  }
+    return `https://api.openweathermap.org/data/2.5/weather?&lat=${lat}&lon=${lon}&q=${city},${country}&appid=${KEY}&units=${scale}&lang=${lang}`
+}
+
 
 if(navigator.geolocation && (!sessionStorage.getItem("latitude") || !sessionStorage.getItem("latitude") ) ){
 	const location = navigator.geolocation // ubicacion
@@ -310,12 +267,16 @@ location.getCurrentPosition( position )
 
 }
 
+// countryCodes[country.toLowerCase().replace( /[áä]/g, 'a').replace(/[éë]/g, 'e').replace(/[íï]/g, 'i').replace(/[óö]/g, 'o').replace(/[úü]/g, 'u')].toUpperCase()  
 const convertCoCode = ( country, type) => {
+  if (type === 'coCi') {
+    return countryCodes[country.toLowerCase().replace( /[áä]/g, 'a').replace(/[éë]/g, 'e').replace(/[íï]/g, 'i').replace(/[óö]/g, 'o').replace(/[úü]/g, 'u')]?.toUpperCase() || country
+  }
+  if (type === 'onlyC') {
+    return countryCodes['accents'][country] || country
+  }
 
-	return type == 'coCi' ? countryCodes[country.toLowerCase().replace( /[áä]/g, 'a').replace(/[éë]/g, 'e').replace(/[íï]/g, 'i').replace(/[óö]/g, 'o').replace(/[úü]/g, 'u')].toUpperCase()  
-												: type== "onlyC" ? countryCodes['accents'][country] ? countryCodes['accents'][country] 
-												: country  
-												:  console.log('Invalid case type.');
+  return country
 }
 
 entryCi.addEventListener( 'keydown', (e) => {
@@ -327,11 +288,12 @@ entryCi.addEventListener( 'keydown', (e) => {
 	}else if((e.keyCode === 13 || e.which === 13) && (entryCo.value)){
 		let country = entryCo.value
 
-		country= convertCoCode(country, 'coCi' )
+		country = convertCoCode(country, 'coCi' )
 		let city = entryCi.value
+    console.log(country, city, scales);
 
 		console.log("Key preseed")
-		const url = 	urlS(API_KEY, city, country, '', '', scales)
+		const url = urlS(API_KEY, city, country, '', '', scales)
 
 		getData(url)
 		weatherInterval(url)
@@ -347,10 +309,12 @@ entryCo.addEventListener( 'keydown', (e) => {
 	}
 	else if ((e.keyCode === 13 || e.which === 13) && !(entryCi.value) ){
 		let country = entryCo.value
-		country= convertCoCode(country, 'onlyC' )
+		country = convertCoCode(country, 'onlyC' )
+
+    console.log(country);
 
 		console.log("Key preseed")
-		const url = 	urlS(API_KEY, country, '', '', '',scales)
+		const url = buildUrl({ KEY: API_KEY, country, scale: scales })
 
 		getData(url)
 		weatherInterval(url )
@@ -371,23 +335,6 @@ entryCo.addEventListener( 'keydown', (e) => {
 	}
 } )
 
-
-
-const amPm = {
-	13 : 1,
-	14 : 2,
-	15 : 3,
-	16 : 4,
-	17 : 5,
-	18 : 6,
-	19 : 7,
-	20 : 8,
-	21 : 9,
-	22 : 10,
-	23 : 11,
-	0 : 12
-}
-
 const changeBg = ( hour) => {
 
 		if ( hour > 17 ) {
@@ -396,19 +343,16 @@ const changeBg = ( hour) => {
 			document.body.style = 'background-image: url("static/afternoon.jpg")'
 		}else{
 			document.body.style = 'background-image: url("static/morning.jpg");color:#000'
-			
 		}
-
 }
 
 const getTime = () => {
 
 	let amPmIndicator = ''
-	let h = currentHour()[0] //obtenemos la hora
+	let h = currentHour().hour
+	let min = currentHour().mins  
 
 	let hour = h  // para mostrar la hora 12h
-
-	let min = currentHour()[1]  //obtenemos el minuto
 
 	String(min).length < 2 ? min = `0${min}` : min
 	String(hour).length < 2 ? hour = `0${hour}` : hour
@@ -418,12 +362,12 @@ const getTime = () => {
 	hour = hour % 12 || 12	// convertimos a formato de 12 hora(hour % 12 ), y si la h da 0(false) que sea 12(por el ||).
 	hour = String(hour).padStart(2,'0')
 
-	// h=19 // cambiar hora sin alterar la hora que se muestra
+	// h=16 // cambiar hora sin alterar la hora que se muestra
 
 	var realHour = `${hour}:${min} ${amPmIndicator}`
 	time.textContent = realHour
 	changeBg(h)
-  requestAnimationFrame(getTime);
+  // requestAnimationFrame(getTime);
 
 }
 
