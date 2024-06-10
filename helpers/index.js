@@ -1,6 +1,6 @@
 import { unitsMap } from '../constants/units.js'
 import { currentHour } from '../utils/time.js'
-import { tempValue, icon, located, description, windS, windG, meteor, humidity } from '../constants/htmlElements.js'
+import { tempValue, icon, located, description, windS, windG, meteor, humidity, scaleC, scaleF, scaleK } from '../constants/htmlElements.js'
 import { meteorInSpanish } from '../constants/units.js'
 
 export const putCorrectIconWeather = (meteoro) => {
@@ -51,4 +51,32 @@ export const renderData = (weatherData, scale) => {
   located.textContent = location
   description.textContent = observation
   humidity.textContent = `${humidityData} %`
+}
+
+export function changeBg ( hour) {
+  if ( hour > 17 ) {
+    document.body.style = 'background-image: url("static/night.jpg")'
+  }else if ( hour > 12 ) {
+    document.body.style = 'background-image: url("static/afternoon.jpg")'
+  }else{
+    document.body.style = 'background-image: url("static/morning.jpg");color:#000'
+  }
+}
+
+
+export function setActiveScale(activeScale) {
+  const scales = [ 
+    { name: 'celcius', element: scaleC  }, 
+    { name: 'fahrenheit', element: scaleF }, 
+    { name: 'kelvin', element: scaleK}
+  ];
+  
+  scales.forEach(scale => {
+    const element = scale.element
+    if (scale.name === activeScale) {
+      element.style.background = '#d4f'
+    } else {
+      element.style.background = '#fff'
+    }
+  });
 }

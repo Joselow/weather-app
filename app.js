@@ -1,17 +1,25 @@
-import { time, entryCo, entryCi, scaleC, scaleF, scaleK, wheaterForm, } from './constants/htmlElements.js'
+import { timeElement, inputCountry, inputCity, wheaterForm, optionScales } from './constants/htmlElements.js'
 import { units, countryCodes, countriesWithExceptions } from './constants/units.js'
 import { showError } from './helpers/showError.js'
-import { currentHour } from './utils/time.js'
+import { updateTime } from './utils/time.js'
 import { getWheatherByCoord, getWheatherByNames } from './services/wheatherService.js'
 import { replaceAccents } from './utils/index.js'
-import { putCorrectIconWeather, renderData } from './helpers/index.js'
+import { putCorrectIconWeather, renderData, changeBg, setActiveScale } from './helpers/index.js'
+import { getLatitude, getLongitude, getScale, setLatitude, setLongitude, setScale } from './helpers/sessionStores.js'
 
 "use strict"
 
 let scales
+
 addEventListener( 'load', async(e) =>  {
-  scales = units.celcius;
-  scaleC.style = "background:#d4f"
+  handleTime()
+  changeBg(new Date().getHours())
+
+  const { code = '', name = '' } = getScale() || {  code: units.celcius.code, name: units.celcius.name }
+
+  scales = code;
+  setActiveScale(name)
+
   if(navigator.geolocation && (!sessionStorage.getItem("latitude") || !sessionStorage.getItem("latitude") ) ){
     const location = navigator.geolocation // ubicacion
     const error = (err) => {
@@ -22,8 +30,9 @@ addEventListener( 'load', async(e) =>  {
   
       const lon = pos.coords.longitude 
       const lat = pos.coords.latitude 
-      sessionStorage.setItem("latitude", lat); 
-      sessionStorage.setItem("longitude", lon)
+
+      setLatitude(lat)
+      setLongitude(lon)
   
       const res = await getWheatherByCoord({ lat, lon, scale: scales })
       if (!res.success) {
@@ -44,8 +53,8 @@ addEventListener( 'load', async(e) =>  {
   
   } else if(navigator.geolocation && (sessionStorage.getItem("latitude") && sessionStorage.getItem("latitude"))){
     
-      const lon = sessionStorage.getItem( 'longitude' ) 
-      const lat = sessionStorage.getItem( 'latitude' ) 
+      const lon = getLongitude()
+      const lat = getLatitude()
   
       const res = await getWheatherByCoord({ lat, lon, scale: scales })
       if (!res.success) {
@@ -64,180 +73,50 @@ wheaterForm.addEventListener('submit', async (e) => {
 
   const form = e.target
   const formData = new FormData(form) 
-  const { city, country } = Object.fromEntries(formData)
+  const { country } = Object.fromEntries(formData)
 
   if (!country) {
     showError('Por favor ingrese el pais')
     return
   }
 
-  let countryName
-  if (!city) {
-    countryName = countriesWithExceptions[country] ?? country
-  }
-  else{
-    countryName = countryCodes[replaceAccents(country.toLowerCase())] ?? country
-  }
-
-  const res = await getWheatherByNames({ city, country: countryName, scale: scales })
-  if (!res.success) {
-    showError(res.message)
-    return
-  }
-
-  renderData(res.data, scales)
-  putCorrectIconWeather(res.data.weather[0]?.main)
+  handleGetWheatherByScale(scales)
 })
 
-scaleC.addEventListener( 'click', async (e) => {
-	scales = units.celcius
-
-	scaleC.style = "background:#d4f"
-	scaleK.style = "background:#fff"
-	scaleF.style = "background:#fff"
-
-  if (entryCo.value) {
-    let countryName
-    if (!entryCi.value) {
-      countryName = countriesWithExceptions[entryCo.value] ?? entryCo.value
-    }
-    else{
-      countryName = countryCodes[replaceAccents(entryCo.value.toLowerCase())] ?? entryCo.value
-    }
-  
-    const res = await getWheatherByNames({ city: entryCi.value, country: countryName, scale: scales })
-    if (!res.success) {
-      showError(res.message)
-      return
-    }
-  
-    renderData(res.data, scales)
-    putCorrectIconWeather(res.data.weather[0]?.main)
-    return
+optionScales.addEventListener('click', (e) => {
+  const elementClicked = e.target
+  let scaleName
+  if (elementClicked.classList.contains('scale-c')) {
+    scales = units.celcius.code
+    scaleName = units.celcius.name
+  }
+  else if (elementClicked.classList.contains('scale-f')) {
+    scales = units.fahrenheit.code
+    scaleName = units.fahrenheit.name
+  }
+  else if (elementClicked.classList.contains('scale-k')) {
+    scales = units.kelvin.code
+    scaleName = units.kelvin.name
   }
 
-  const lon = sessionStorage.getItem( 'longitude' ) 
-  const lat = sessionStorage.getItem( 'latitude' ) 
+  setScale({ code: scales, name: scaleName})
+  setActiveScale(scaleName)
 
-  if (lon && lat) {
-    const res = await getWheatherByCoord({ lat, lon, scale: scales })
-    if (!res.success) {
-      showError(res.message)
-    }
-    else{
-      renderData(res.data, scales)
-      putCorrectIconWeather(res.data.weather[0]?.main)
-    }
+  if (inputCountry.value) {
+    handleGetWheatherByScale(scales)
     return
   }
-  else if (!entryCi.value || !entryCo.value) {
-    showError('Ingresa el pais')
-    return
-  }
-
-} )
-
-scaleF.addEventListener( 'click', async(e) => {
-	scales = units.fahrenheit
-	scaleF.style = "background:#d4f"
-	scaleC.style = "background:#fff"
-	scaleK.style = "background:#fff"
-
-  if (entryCo.value) {
-    let countryName
-    if (!entryCi.value) {
-      countryName = countriesWithExceptions[entryCo.value] ?? entryCo.value
-    }
-    else{
-      countryName = countryCodes[replaceAccents(entryCo.value.toLowerCase())] ?? entryCo.value
-    }
-  
-    const res = await getWheatherByNames({ city: entryCi.value, country: countryName, scale: scales })
-    if (!res.success) {
-      showError(res.message)
-      return
-    }
-  
-    renderData(res.data, scales)
-    putCorrectIconWeather(res.data.weather[0]?.main)
-    return
-  }
-
-  const lon = sessionStorage.getItem( 'longitude' ) 
-  const lat = sessionStorage.getItem( 'latitude' ) 
-
-  if (lon && lat) {
-    const res = await getWheatherByCoord({ lat, lon, scale: scales })
-    if (!res.success) {
-      showError(res.message)
-    }
-    else{
-      renderData(res.data, scales)
-      putCorrectIconWeather(res.data.weather[0]?.main)
-    }
-    return
-  }
-  else if (!entryCi.value || !entryCo.value) {
-    showError('Ingresa el pais')
-    return
-  }
+  handleGetWheatherByCoord()
 })
 
-scaleK.addEventListener( 'click', async(e) => {
-	scales = units["kelvin"]
-		scaleK.style = "background:#d4f"
-		scaleC.style = "background:#fff"
-		scaleF.style = "background:#fff"
-
-    if (entryCo.value) {
-      let countryName
-      if (!entryCi.value) {
-        countryName = countriesWithExceptions[entryCo.value] ?? entryCo.value
-      }
-      else{
-        countryName = countryCodes[replaceAccents(entryCo.value.toLowerCase())] ?? entryCo.value
-      }
-    
-      const res = await getWheatherByNames({ city: entryCi.value, country: countryName, scale: scales })
-      if (!res.success) {
-        showError(res.message)
-        return
-      }
-    
-      renderData(res.data, scales)
-      putCorrectIconWeather(res.data.weather[0]?.main)
-      return
-    }
-  
-    const lon = sessionStorage.getItem( 'longitude' ) 
-    const lat = sessionStorage.getItem( 'latitude' ) 
-  
-    if (lon && lat) {
-      const res = await getWheatherByCoord({ lat, lon, scale: scales })
-      if (!res.success) {
-        showError(res.message)
-      }
-      else{
-        renderData(res.data, scales)
-        putCorrectIconWeather(res.data.weather[0]?.main)
-      }
-      return
-    }
-    else if (!entryCi.value || !entryCo.value) {
-      showError('Ingresa el pais')
-      return
-    }
-
-} )
-
-entryCi.addEventListener( 'keydown', async(e) => {
+inputCity.addEventListener( 'keydown', async(e) => {
   const isKeyEnter = e.keyCode === 13 || e.which === 13
 
-	if (isKeyEnter && !entryCo.value) { 
+	if (isKeyEnter && !inputCountry.value) { 
 		showError('Porfavor, Ingresa el pais')
 		return
 	}
-  else if(isKeyEnter && entryCo.value && entryCi.value){
+  else if(isKeyEnter && inputCountry.value && inputCity.value){
     const countryName = countryCodes[replaceAccents(country.toLowerCase())] ?? country
   
     const res = await getWheatherByNames({ city, country: countryName, scale: scales })
@@ -251,14 +130,14 @@ entryCi.addEventListener( 'keydown', async(e) => {
   }
 })
 
-entryCo.addEventListener( 'keydown', async (e) => {
+inputCountry.addEventListener( 'keydown', async (e) => {
   const isKeyEnter = e.keyCode === 13 || e.which === 13
 
-	if(isKeyEnter && !entryCo.value){
+	if(isKeyEnter && !inputCountry.value){
 		showError('Porfavor, ingresa el pais')
 		return
 	}
-	else if (isKeyEnter && !(entryCi.value) ){
+	else if (isKeyEnter && !(inputCity.value) ){
     const countryName = countriesWithExceptions[country] ?? country
   
     const res = await getWheatherByNames({ city, country: countryName, scale: scales })
@@ -270,7 +149,7 @@ entryCo.addEventListener( 'keydown', async (e) => {
     renderData(res.data, scales)
     putCorrectIconWeather(res.data.weather[0]?.main)
 	}
-	else if (isKeyEnter && (entryCi.value) ){
+	else if (isKeyEnter && (inputCity.value) ){
     const countryName = countryCodes[replaceAccents(country.toLowerCase())] ?? country
   
     const res = await getWheatherByNames({ city, country: countryName, scale: scales })
@@ -284,43 +163,54 @@ entryCo.addEventListener( 'keydown', async (e) => {
 	}
 })
 
-const changeBg = ( hour) => {
-		if ( hour > 17 ) {
-			document.body.style = 'background-image: url("static/night.jpg")'
-		}else if ( hour > 12 ) {
-			document.body.style = 'background-image: url("static/afternoon.jpg")'
-		}else{
-			document.body.style = 'background-image: url("static/morning.jpg");color:#000'
-		}
+
+
+async function handleGetWheatherByScale (scale) {
+  let countryName
+  if (!inputCity.value) {
+    countryName = countriesWithExceptions[inputCountry.value] ?? inputCountry.value
+  }
+  else{
+    countryName = countryCodes[replaceAccents(inputCountry.value.toLowerCase())] ?? inputCountry.value
+  }
+
+  const res = await getWheatherByNames({ city: inputCity.value, country: countryName, scale })
+  if (!res.success) {
+    showError(res.message)
+    return
+  }
+
+  renderData(res.data, scale)
+  putCorrectIconWeather(res.data.weather[0]?.main)
 }
 
-const getTime = () => {
-	let amPmIndicator = ''
-	let h = currentHour().hour
-	let min = currentHour().mins  
+async function handleGetWheatherByCoord () {
+  const lat = getLatitude() 
+  const lon = getLongitude() 
 
-	let hour = h  // para mostrar la hora 12h
-
-	String(min).length < 2 ? min = `0${min}` : min
-	String(hour).length < 2 ? hour = `0${hour}` : hour
-
-	
-	amPmIndicator = hour >= 12 ? 'PM' : 'AM'
-	hour = hour % 12 || 12	// convertimos a formato de 12 hora(hour % 12 ), y si la h da 0(false) que sea 12(por el ||).
-	hour = String(hour).padStart(2,'0')
-
-	// h=16 // cambiar hora sin alterar la hora que se muestra
-
-	var realHour = `${hour}:${min} ${amPmIndicator}`
-	time.textContent = realHour
-	changeBg(h)
-  // requestAnimationFrame(getTime);
+  if (lon && lat) {
+    const res = await getWheatherByCoord({ lat, lon, scale: scales })
+    if (!res.success) {
+      showError(res.message)
+    }
+    else{
+      renderData(res.data, scales)
+      putCorrectIconWeather(res.data.weather[0]?.main)
+    }
+    return
+  }
+  else if (!inputCity.value || !inputCountry.value) {
+    showError('Ingresa el pais')
+    return
+  }
 }
 
-// getTime()
+const handleTime = () => {
+  const hour = updateTime();
 
-requestAnimationFrame(getTime);
-// setInterval( getTime, 60000 )
+  requestAnimationFrame(handleTime);
+  timeElement.textContent = hour
+}
 
 
 

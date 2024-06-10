@@ -7,9 +7,18 @@ export const unitsMap = {
 
 
 export const units = { 
-  celcius : 'metric', 
-  fahrenheit : 'imperial', 
-  kelvin :''
+  celcius : {
+    name: 'celcius',
+    code: 'metric'
+  }, 
+  fahrenheit : {
+    name: 'fahrenheit',
+    code: 'imperial'
+  },
+  kelvin : {
+    name: 'kelvin',
+    code: ''
+  }, 
 }
 export const lang = "es"
 
