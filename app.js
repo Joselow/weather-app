@@ -67,7 +67,6 @@ addEventListener( 'load', async(e) =>  {
   }
 })
 
-
 wheaterForm.addEventListener('submit', async (e) => {
   e.preventDefault()
 
@@ -108,62 +107,6 @@ optionScales.addEventListener('click', (e) => {
   }
   handleGetWheatherByCoord()
 })
-
-inputCity.addEventListener( 'keydown', async(e) => {
-  const isKeyEnter = e.keyCode === 13 || e.which === 13
-
-	if (isKeyEnter && !inputCountry.value) { 
-		showError('Porfavor, Ingresa el pais')
-		return
-	}
-  else if(isKeyEnter && inputCountry.value && inputCity.value){
-    const countryName = countryCodes[replaceAccents(country.toLowerCase())] ?? country
-  
-    const res = await getWheatherByNames({ city, country: countryName, scale: scales })
-    if (!res.success) {
-      showError(res.message)
-      return
-    }
-  
-    renderData(res.data, scales)
-    putCorrectIconWeather(res.data.weather[0]?.main)
-  }
-})
-
-inputCountry.addEventListener( 'keydown', async (e) => {
-  const isKeyEnter = e.keyCode === 13 || e.which === 13
-
-	if(isKeyEnter && !inputCountry.value){
-		showError('Porfavor, ingresa el pais')
-		return
-	}
-	else if (isKeyEnter && !(inputCity.value) ){
-    const countryName = countriesWithExceptions[country] ?? country
-  
-    const res = await getWheatherByNames({ city, country: countryName, scale: scales })
-    if (!res.success) {
-      showError(res.message)
-      return
-    }
-  
-    renderData(res.data, scales)
-    putCorrectIconWeather(res.data.weather[0]?.main)
-	}
-	else if (isKeyEnter && (inputCity.value) ){
-    const countryName = countryCodes[replaceAccents(country.toLowerCase())] ?? country
-  
-    const res = await getWheatherByNames({ city, country: countryName, scale: scales })
-    if (!res.success) {
-      showError(res.message)
-      return
-    }
-  
-    renderData(res.data, scales)
-    putCorrectIconWeather(res.data.weather[0]?.main)
-	}
-})
-
-
 
 async function handleGetWheatherByScale (scale) {
   let countryName
@@ -211,6 +154,3 @@ const handleTime = () => {
   requestAnimationFrame(handleTime);
   timeElement.textContent = hour
 }
-
-
-
