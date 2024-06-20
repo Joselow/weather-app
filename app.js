@@ -13,7 +13,7 @@ let scales
 
 addEventListener( 'load', async(e) =>  {
   handleTime()
-  changeBg(new Date().getHours())
+  changeBg(17??new Date().getHours())
 
   const { code = '', name = '' } = getScale() || {  code: units.celcius.code, name: units.celcius.name }
 

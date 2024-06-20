@@ -55,9 +55,9 @@ export const renderData = (weatherData, scale) => {
 
 export function changeBg ( hour) {
   if ( hour > 17 ) {
-    document.body.style = 'background-image: url("static/night.jpg")'
+    document.body.style = 'background-image: url("static/night.webp")'
   }else if ( hour > 12 ) {
-    document.body.style = 'background-image: url("static/afternoon.jpg")'
+    document.body.style = 'background-image: url("static/afternoon.webp")'
   }else{
     document.body.style = 'background-image: url("static/morning.jpg");color:#000'
   }
