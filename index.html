@@ -1,96 +1,213 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Clima</title>
-	<link rel="stylesheet" href="">
-	<link rel="stylesheet" type="text/css" href="style.css">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Clima</title>
 
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-</head>
-<body>
-	<div class="content-gf">
-		
-		<div class="content form">
-			<div class="content-child entry">		
-        <form action="" id="wheater-form">
-          <input class="search-co" placeholder=" Pais " type="text" name="country">
-          <input class="search-ci" placeholder=" Ciudad" type="text" name="city">
-          <button id="btn-search" type="submit">Buscar</button>
-        </form>	
-				<div class="btns-weather">
-					<button class="scale-c">°C</button>
-					<button class="scale-f">°F</button>
-					<button class="scale-k">°K</button>
-				</div>
-			
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @keyframes msgUp {
+        from {
+          opacity: 0;
+          transform: translateY(-100%);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
 
-				<!-- <label>
-				  <input type="radio" name="scales" value="celcius" checked>
-				  °C
-				</label>
+      @keyframes msgDown {
+        from {
+          opacity: 1;
+        }
+        to {
+          opacity: 0;
+          transform: translateY(10%);
+        }
+      }
 
-				<label>
-				  <input type="radio" name="scales" value="fahrenheit">
-				  °F
-				</label>
+      .animate-msgUp {
+        animation: msgUp 0.5s forwards;
+      }
 
-				<label>
-				  <input type="radio" name="scales" value="kelvin">
-				  °K
-				</label> -->
+      .animate-msgDown {
+        animation: msgDown 0.5s forwards;
+      }
+      body {
+        background-attachment: fixed;
+        background-size: cover;
+      }
+    </style>
+  </head>
+  <body class="flex items-center justify-center min-h-screen bg-gray-800">
+    <div class="max-w-screen-md w-full">
+      <div class="bg-black rounded-lg pt-3 shadow-md m-6">
+        <div class="flex flex-col gap-4 items-center">
+          <form
+            action=""
+            id="wheater-form"
+            class="flex flex-col md:flex-row md:items-center md:gap-2"
+          >
+            <div class="w-full md:w-auto mb-2 md:mb-0">
+              <input
+                type="text"
+                id="search-co"
+                class="search-co bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="Busca un país, eje: Perú"
+                name="country"
+              />
+            </div>
+            <div class="w-full md:w-auto mb-2 md:mb-0">
+              <input
+                type="text"
+                id="search-ci"
+                class="search-ci bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="Busca una ciudad,eje: Lima"
+                name="city"
+              />
+            </div>
 
-				
-			</div>
-		</div>
-		<div class ="content-msg">
-			<div class="message"> MSG-ERROR </div>
-		</div>
+            <button
+              id="btn-search"
+              type="submit"
+              class="p-2.5 text-sm font-medium text-white bg-sky-300 rounded-lg border border-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-sky-300 dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800"
+            >
+              <div class="flex gap-1 items-center justify-center">
+                <svg
+                  class="w-4 h-4"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                  />
+                </svg>
+                <span class="sm:hidden ms-1">Buscar</span>
+                <span class="sr-only">Search</span>
+              </div>
+            </button>
+          </form>
 
-		<div class="content-weather">
-			<div class="content-child weather">
-				<h3 class="time">Hora</h3>
+          <div class="btns-weather flex flex-wrap gap-2">
+            <button
+              type="button"
+              id="scale-c"
+              class="scale-c border border-yellow-500 border hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-sm py-1 px-6 text-center me-2 mb-2"
+            >
+              °C
+            </button>
+            <button
+              type="button"
+              id="scale-f"
+              class="scale-f py-1 px-6 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border-2 border-gray-200 hover:bg-gray-200 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100"
+            >
+              °F
+            </button>
+            <button
+              type="button"
+              id="scale-k"
+              class="scale-k border-yellow-700 border hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-sm py-1 px-6 text-center mb-2"
+            >
+              °K
+            </button>
+          </div>
+        </div>
+      </div>
 
-				<h2 class="temperature-value">...</h2>
+      <div
+        class="message hidden absolute top-2 right-2 bg-red-600 text-white px-8 py-1.5"
+      >
+        Mensaje de error
+      </div>
 
-				<img class="icon" src="animated/weather_sunset.svg"  alt="">
-				<h3 class="observation">The eclipse</h3>
+      <div
+        class="content-weather grid grid-cols-1 md:grid-cols-2 gap-4 rounded-lg shadow-md p-6"
+      >
+        <div
+          class="content-child weather flex items-center justify-center flex-col p-4 rounded-lg border-gray-900 border-1 shadow-2xl"
+        >
+          <h3 class="time text-lg font-semibold text-gray-800 dark:text-white">
+            Hora
+          </h3>
 
+          <h2
+            class="temperature-value text-4xl font-bold text-blue-600 dark:text-blue-300 mt-2"
+          >
+            ...
+          </h2>
 
-			</div>
+          <img
+            class="icon w-16 h-16 mt-2"
+            src="animated/weather_sunset.svg"
+            alt="Icono del clima"
+          />
 
-			<div class="content-child place">
-				<h2 class="location">Ubicación</h2>
-				<h3 class="meteor">...</h3>
-				<label>Humedad</label>
-				<h3 class="humidity">...</h3>
+          <h3
+            class="observation text-base font-medium text-gray-600 dark:text-gray-400 mt-2"
+          >
+            The eclipse
+          </h3>
+        </div>
 
-				<label>Velocidad del Viento</label>
-				<h3 class="wind-speed">...</h3>
+        <div
+          class="content-child place p-4 border-gray-900 border-1 shadow-2xl rounded-lg text-center"
+        >
+          <h2 class="location text-2xl font-bold text-gray-800 dark:text-white">
+            Ubicación
+          </h2>
 
-				<label>Rafaga de Viento</label>
-				<h3 class="wind-gust">...</h3>
+          <h3
+            class="meteor text-lg font-semibold text-gray-600 dark:text-gray-400 mt-2"
+          >
+            ...
+          </h3>
 
+          <div class="flex flex-col mt-4">
+            <label class="text-sm font-medium text-gray-600 dark:text-gray-400"
+              >Humedad</label
+            >
+            <h3
+              class="humidity text-base font-medium text-gray-600 dark:text-gray-400"
+            >
+              ...
+            </h3>
+          </div>
 
-			</div>
-			
+          <div class="flex flex-col mt-2">
+            <label class="text-sm font-medium text-gray-600 dark:text-gray-400"
+              >Velocidad del Viento</label
+            >
+            <h3
+              class="wind-speed text-base font-medium text-gray-600 dark:text-gray-400"
+            >
+              ...
+            </h3>
+          </div>
 
-		</div>
-	</div>
-<script>
-  // document.querySelector('.btns-weather').addEventListener('click', (e) => {
-  //   const element = e.target
+          <div class="flex flex-col mt-2">
+            <label class="text-sm font-medium text-gray-600 dark:text-gray-400"
+              >Ráfaga de Viento</label
+            >
+            <h3
+              class="wind-gust text-base font-medium text-gray-600 dark:text-gray-400"
+            >
+              ...
+            </h3>
+          </div>
+        </div>
+      </div>
+    </div>
 
-  //   if (element.classList.contains('scale-c')) {
-  //     console.log('aea');
-  //   }
-  // })
-
-</script>
-
-	<script src="./app.js" type="module" charset="utf-8" ></script>
-</body>
+    <script src="./app.js" type="module" charset="utf-8"></script>
+  </body>
 </html>
