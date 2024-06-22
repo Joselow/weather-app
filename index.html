@@ -7,6 +7,9 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <link rel="preload" href="./static/morning.webp" as="image">
+
+
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
       @keyframes msgUp {
@@ -102,21 +105,21 @@
             <button
               type="button"
               id="scale-c"
-              class="scale-c border border-yellow-500 border hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-sm py-1 px-6 text-center me-2 mb-2"
+              class="scale-c text-white border border-yellow-500 border hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-200 font-medium rounded-full text-sm py-1 px-6 text-center me-2 mb-2"
             >
               °C
             </button>
             <button
               type="button"
               id="scale-f"
-              class="scale-f py-1 px-6 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border-2 border-gray-200 hover:bg-gray-200 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100"
+              class="scale-f text-white py-1 px-6 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none rounded-full border-2 border-gray-200 hover:bg-gray-200 hover:text-blue-700 focus:ring-2 focus:ring-gray-400"
             >
               °F
             </button>
             <button
               type="button"
               id="scale-k"
-              class="scale-k border-yellow-700 border hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-sm py-1 px-6 text-center mb-2"
+              class="scale-k text-white border-yellow-700 border hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-300 font-medium rounded-full text-sm py-1 px-6 text-center mb-2"
             >
               °K
             </button>
@@ -125,81 +128,81 @@
       </div>
 
       <div
-        class="message hidden absolute top-2 right-2 bg-red-600 text-white px-8 py-1.5"
+        class="message rounded-lg hidden absolute top-2 right-2 bg-red-600 text-white px-8 py-1.5"
       >
         Mensaje de error
       </div>
 
       <div
-        class="content-weather grid grid-cols-1 md:grid-cols-2 gap-4 rounded-lg shadow-md p-6"
+        class="content-weather grid grid-cols-1 md:grid-cols-2 gap-4 p-6"
       >
         <div
-          class="content-child weather flex items-center justify-center flex-col p-4 rounded-lg border-gray-900 border-1 shadow-2xl"
+          class="backdrop-blur-[2px] content-child weather flex items-center justify-center flex-col p-4 rounded-xl border-gray-900 border-1 shadow-2xl"
         >
-          <h3 class="time text-lg font-semibold text-gray-800 dark:text-white">
+          <h3 class="time font-semibold bg-white text-gray-500 rounded-md px-2 text-md">
             Hora
           </h3>
 
           <h2
-            class="temperature-value text-4xl font-bold text-blue-600 dark:text-blue-300 mt-2"
+            class="temperature-value text-4xl font-bold text-blue-300  mt-2"
           >
             ...
           </h2>
 
           <img
-            class="icon w-16 h-16 mt-2"
+            class="icon w-32 h-32 mt-2"
             src="animated/weather_sunset.svg"
             alt="Icono del clima"
           />
 
           <h3
-            class="observation text-base font-medium text-gray-600 dark:text-gray-400 mt-2"
+            class="observation text-base font-medium text-gray-100 mt-2"
           >
             The eclipse
           </h3>
         </div>
 
         <div
-          class="content-child place p-4 border-gray-900 border-1 shadow-2xl rounded-lg text-center"
+          class="backdrop-blur-[2px] content-child place p-4 border-1 shadow-2xl rounded-xl text-center"
         >
-          <h2 class="location text-2xl font-bold text-gray-800 dark:text-white">
+          <h2 class="location text-2xl font-bold text-black dark:text-white">
             Ubicación
           </h2>
 
           <h3
-            class="meteor text-lg font-semibold text-gray-600 dark:text-gray-400 mt-2"
+            class="meteor text-lg font-semibold text-gray-200 bg-emerald-600 py-1 px-3 rounded-lg inline text-xs"
           >
             ...
           </h3>
 
           <div class="flex flex-col mt-4">
-            <label class="text-sm font-medium text-gray-600 dark:text-gray-400"
+            <label class="text-sm font-medium text-gray-100"
               >Humedad</label
             >
             <h3
-              class="humidity text-base font-medium text-gray-600 dark:text-gray-400"
+              class="humidity text-base font-medium text-gray-100"
             >
               ...
             </h3>
           </div>
 
           <div class="flex flex-col mt-2">
-            <label class="text-sm font-medium text-gray-600 dark:text-gray-400"
+            <label class="text-sm font-medium text-gray-100"
               >Velocidad del Viento</label
             >
             <h3
-              class="wind-speed text-base font-medium text-gray-600 dark:text-gray-400"
+              class="wind-speed text-base font-medium text-gray-100"
             >
               ...
             </h3>
           </div>
 
           <div class="flex flex-col mt-2">
-            <label class="text-sm font-medium text-gray-600 dark:text-gray-400"
+            <label class="text-sm font-medium text-gray-100"
               >Ráfaga de Viento</label
             >
             <h3
-              class="wind-gust text-base font-medium text-gray-600 dark:text-gray-400"
+              class="wind-gust text-base font-medium text-gray-100"
             >
               ...
             </h3>

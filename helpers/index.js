@@ -1,4 +1,4 @@
-import { unitsMap } from '../constants/units.js'
+import { units, unitsMap } from '../constants/units.js'
 import { currentHour } from '../utils/time.js'
 import { tempValue, icon, located, description, windS, windG, meteor, humidity, scaleC, scaleF, scaleK } from '../constants/htmlElements.js'
 import { meteorInSpanish } from '../constants/units.js'
@@ -53,13 +53,13 @@ export const renderData = (weatherData, scale) => {
   humidity.textContent = `${humidityData} %`
 }
 
-export function changeBg ( hour) {
+export function changeBg ( hour) {  
   if ( hour > 17 ) {
     document.body.style = 'background-image: url("static/night.webp")'
   }else if ( hour > 12 ) {
     document.body.style = 'background-image: url("static/afternoon.webp")'
   }else{
-    document.body.style = 'background-image: url("static/morning.jpg");color:#000'
+    document.body.style = 'background-image: url("static/morning.webp");color:#000'
   }
 }
 
@@ -74,9 +74,23 @@ export function setActiveScale(activeScale) {
   scales.forEach(scale => {
     const element = scale.element
     if (scale.name === activeScale) {
-      element.style.background = '#d4f'
+      if(activeScale === units.celcius.name) {
+        element.classList.add('bg-yellow-500')
+      } else if (activeScale === units.fahrenheit.name) {
+        element.classList.add('bg-gray-200', 'text-gray-950')
+      }
+      else {
+        element.classList.add('bg-purple-800')
+      }
     } else {
-      element.style.background = '#fff'
+      if(scale.name === units.celcius.name) {
+        element.classList.remove('bg-yellow-500')
+      } else if (scale.name === units.fahrenheit.name) {
+        element.classList.remove('bg-gray-200', 'text-gray-950')
+      }
+      else {
+        element.classList.remove('bg-purple-800')
+      }
     }
   });
 }
