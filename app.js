@@ -20,51 +20,7 @@ addEventListener( 'load', async(e) =>  {
   scales = code;
   setActiveScale(name)
 
-  if(navigator.geolocation && (!sessionStorage.getItem("latitude") || !sessionStorage.getItem("latitude") ) ){
-    const location = navigator.geolocation // ubicacion
-    const error = (err) => {
-      console.log(error)
-    }
-    const position = async (pos) => {
-      console.log(pos) 
-  
-      const lon = pos.coords.longitude 
-      const lat = pos.coords.latitude 
-
-      setLatitude(lat)
-      setLongitude(lon)
-  
-      const res = await getWheatherByCoord({ lat, lon, scale: scales })
-      if (!res.success) {
-        showError(res.message)
-        return
-      }
-  
-      renderData(res.data, scales)
-      putCorrectIconWeather(res.data.weather[0]?.main)
-  
-      // const url = 	urlS(API_KEY, '', '', lat, lon, scales)
-  
-      // getData(url)
-      // weatherInterval( url )
-    }
-  
-    location.getCurrentPosition(position)
-  
-  } else if(navigator.geolocation && (sessionStorage.getItem("latitude") && sessionStorage.getItem("latitude"))){
-    
-      const lon = getLongitude()
-      const lat = getLatitude()
-  
-      const res = await getWheatherByCoord({ lat, lon, scale: scales })
-      if (!res.success) {
-        showError(res.message)
-      }
-      else{
-        renderData(res.data, scales)
-        putCorrectIconWeather(res.data.weather[0]?.main)
-      }
-  }
+  getLocationAndFetchWeather()
 })
 
 wheaterForm.addEventListener('submit', async (e) => {
@@ -153,4 +109,44 @@ const handleTime = () => {
 
   requestAnimationFrame(handleTime);
   timeElement.textContent = hour
+}
+
+async function getLocationAndFetchWeather () {
+  const lon = getLongitude()
+  const lat = getLatitude()
+
+  if(navigator.geolocation && (!lat || !lon)){
+    const location = navigator.geolocation // ubicacion
+    const error = (err) => {
+      showError('lo sentimos, no se pudo obteenr tu ubicación');
+    }
+    const position = async (pos) => {  
+      const lon = pos.coords.longitude 
+      const lat = pos.coords.latitude 
+
+      setLatitude(lat)
+      setLongitude(lon)
+  
+      const res = await getWheatherByCoord({ lat, lon, scale: scales })
+      if (!res.success) {
+        showError(res.message)
+        return
+      }
+  
+      renderData(res.data, scales)
+      putCorrectIconWeather(res.data.weather[0]?.main)
+    }
+
+    location.getCurrentPosition(position, error)
+  
+  } else if(navigator.geolocation && (lat && lon)){
+      const res = await getWheatherByCoord({ lat, lon, scale: scales })
+      if (!res.success) {
+        showError(res.message)
+      }
+      else{
+        renderData(res.data, scales)
+        putCorrectIconWeather(res.data.weather[0]?.main)
+      }
+  }
 }
